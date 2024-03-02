@@ -7,7 +7,7 @@
  parameter BW = 16 // optional parameter
  ) (
  // define I /O ’ s of the module
- input clk_i , // clock
+ input clk, // clock
  input rst_i , // reset
  input signed [BW-1:0] dac_i, //input
  output wire dac_o
@@ -17,11 +17,13 @@
  //wire clk_i;
  //wire signed [BW-1:0] filter_s;
  wire signed[BW-1:0] filter_to_dac_s;
+ wire rst_i;
+ assign rst_i = ~rst_n;
 
  filter_FIR
  #(BW)
  filter_dut (
- .clk_i (clk_i),
+ .clk_i (clk),
  .rst_i (rst_i),
  .filter_i (dac_i),
  .filter_o (filter_to_dac_s)
@@ -30,7 +32,7 @@
  dac_sigma_delta
  #( BW )
  sigma_delta_dut (
- .clk_i ( clk_i ),
+ .clk_i ( clk ),
  .rst_i ( rst_i ),
  .dac_i (filter_to_dac_s),
  .dac_o (dac_o)
