@@ -183,7 +183,7 @@
    end else begin
    //sum <= mul0 + mul1 + mul2 + mul3 + mul4 + mul5 + mul6 + mul7;
    //since all the samples saved in the registered are equally weighted, the summing up of samples can be optimized to:
-   sum <= sum + d0 - d8; //the input sample is added to the sum while the last sample in the shift register is subtracted
+   sum <= sum + {{BW{d0[BW-1]}}, d0} - {{BW{d8[BW-1]}}, d8}; //the input sample is added to the sum while the last sample in the shift register is subtracted. The register values are padded for the correct bit width.
    end
   end
   

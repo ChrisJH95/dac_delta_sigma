@@ -27,7 +27,7 @@ module tb ();
   wire uo1_out;
   wire rst_in;
   assign rst_in = ~rst_n;
-  assign ui16_in = {ui_in, uio_in};
+  assign ui16_in = {uio_in, ui_in};
   assign uo1_out = uo_out[0];
   
   tt_um_delta_sigma 
