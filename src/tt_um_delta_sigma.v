@@ -8,17 +8,26 @@
  ) (
  // define I /O ’ s of the module
  input clk, // clock
- input rst_i , // reset
- input signed [BW-1:0] dac_i, //input
- output wire dac_o
+ input rst_n, // reset
+ inout ena,
+ input [7:0] ui_in,
+ input [7:0] uio_in,
+ output [7:0] uo_out
+ //input signed [BW-1:0] dac_i, //input
+ //output wire dac_o
  );
 
  //wire rst_i;
  //wire clk_i;
  //wire signed [BW-1:0] filter_s;
  wire signed[BW-1:0] filter_to_dac_s;
+ wire signed [BW-1:0] dac_i;
  wire rst_i;
+ wire dac_o;
+ 
  assign rst_i = ~rst_n;
+ assign uo_out[0] = dac_o;
+ assign dac_i = {uio_in, ui_in};
 
  filter_FIR
  #(BW)
