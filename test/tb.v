@@ -26,9 +26,9 @@ module tb ();
   wire [15:0] ui16_in;
   wire uo1_out;
   wire rst_in;
-  assign rst_in = ~rst_n;
-  assign ui16_in = {uio_in, ui_in};
-  assign uo1_out = uo_out[0];
+  //assign rst_in = ~rst_n;
+  //assign ui16_in = {uio_in, ui_in};
+  //assign uo1_out = uo_out[0];
   
   tt_um_delta_sigma 
   #( BW )
@@ -40,15 +40,15 @@ module tb ();
       .VGND(1'b0),
 `endif
 
-      //.ui_in  (ui_in),    // Dedicated inputs
-      //.uo_out (uo_out),   // Dedicated outputs
-      //.uio_in (uio_in),   // IOs: Input path
-      .dac_i(ui16_in),
-      .dac_o(uo1_out),  // IOs: Output path
-      //.uio_oe (uio_oe),   // IOs: Enable path (active high: 0=input, 1=output)
-      //.ena    (ena),      // enable - goes high when design is selected
-      .clk_i  (clk),      // clock
-      .rst_i  (rst_in)    // not reset
+      .ui_in  (ui_in),    // Dedicated inputs
+      .uo_out (uo_out),   // Dedicated outputs
+      .uio_in (uio_in),   // IOs: Input path
+      //.dac_i(ui16_in),
+      //.dac_o(uo1_out),  // IOs: Output path
+      .uio_oe (uio_oe),   // IOs: Enable path (active high: 0=input, 1=output)
+      .ena    (ena),      // enable - goes high when design is selected
+      .clk  (clk),      // clock
+      .rst_n  (rst_n)    // not reset
   );
 
  //input clk_i , // clock
