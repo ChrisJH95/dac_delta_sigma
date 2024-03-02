@@ -12,7 +12,8 @@
  input ena,
  input [7:0] ui_in,
  input [7:0] uio_in,
- output [7:0] uo_out
+ output [7:0] uo_out,
+ output [7:0] uio_oe
  //input signed [BW-1:0] dac_i, //input
  //output wire dac_o
  );
