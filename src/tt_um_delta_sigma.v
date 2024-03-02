@@ -9,7 +9,7 @@
  // define I /O ’ s of the module
  input clk, // clock
  input rst_n, // reset
- inout ena,
+ input ena,
  input [7:0] ui_in,
  input [7:0] uio_in,
  output [7:0] uo_out
