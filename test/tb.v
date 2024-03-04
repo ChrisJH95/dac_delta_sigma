@@ -30,7 +30,7 @@ module tb ();
   //assign ui16_in = {uio_in, ui_in};
   //assign uo1_out = uo_out[0];
   
-  tt_um_delta_sigma 
+  tt_um_top 
   #( BW )
   dut(
 
