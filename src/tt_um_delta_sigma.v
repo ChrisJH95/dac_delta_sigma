@@ -1,14 +1,117 @@
 `timescale 1 ns / 1 ns
  
+ //`include "filter_FIR.v"
+
+ module tt_um_delta_sigma
+  #(
+ parameter BW = 16 // optional parameter
+ ) (
+ // define I /O ’ s of the module
+ input wire clk, // clock
+ input wire rst_n, // reset
+ input wire ena,
+ input wire [7:0] ui_in,
+ input wire [7:0] uio_in,
+ output wire [7:0] uo_out,
+ output wire [7:0] uio_oe,
+ output wire [7:0] uio_out
+ //input signed [BW-1:0] dac_i, //input
+ //output wire dac_o
+ );
+
+ //wire rst_i;
+ //wire clk_i;
+ //wire signed [BW-1:0] filter_s;
+ wire signed[BW-1:0] filter_to_dac_s;
+ wire signed [BW-1:0] dac_i;
+ wire rst_i;
+ wire dac_o;
+ 
+ assign rst_i = ~rst_n;
+ assign uo_out[0] = dac_o;
+ assign dac_i = {uio_in, ui_in};
+
+ filter_FIR
+ #(BW)
+ filter_dut (
+ .clk (clk),
+ .rst_i (rst_i),
+ .filter_i (dac_i),
+ .filter_o (filter_to_dac_s)
+ );
+ 
+ dac_sigma_delta
+ #( BW )
+ sigma_delta_dut (
+ .clk ( clk ),
+ .rst_i ( rst_i ),
+ .dac_i (filter_to_dac_s),
+ .dac_o (dac_o)
+ );
+
+ endmodule // top
+ 
+  module dac_sigma_delta
+ #(
+ parameter BW = 16 // optional parameter
+ ) (
+ // define I /O ’ s of the module
+ input clk , // clock
+ input rst_i , // reset
+ input signed [BW-1:0] dac_i, //input
+ output wire dac_o
+ ) ;
+
+ // start the module implementation
+ localparam BW_diff = 2;
+ localparam BW_2 = BW + BW_diff;        //set the internally used bitwidth to BW + 2 to deal with overflow
+ 
+ wire signed [BW_2-1:0] delta_in; //input into the delta
+ wire signed [BW_2-1:0] delta_1;  //adder 1 output
+ wire signed [BW_2-1:0] sigma_1;  //accumulator 1 output
+ wire signed [BW_2-1:0] adc;      //ADC value to be subtracted from the input at the adder stage
+ wire signed [BW_2-1:0] val_min;  //lowest number to be represented
+ wire signed [BW_2-1:0] val_max;  //highest number to be represented
+
+ reg signed [BW_2-1:0] int1_reg; //register for the integrator
+ reg dac_reg; //output register for the DAC
+
+ // assign the counter value to the output
+
+ assign delta_in = {{2{dac_i[BW-1]}}, dac_i}; //padding the input to the internally used bit-width, while keeping the sign bits for s's complement
+ assign dac_o = dac_reg;
+ //assign val_max = $signed({{(BW_diff + 1){1'b0}},{(BW-1){1'b1}}});
+ //assign val_min = $signed({{(BW_diff + 1){1'b1}},{(BW-1){1'b0}}});
+ assign val_min = -(2**(BW-1)); //assigning the lowest value in 2's complement
+ assign val_max = (2**(BW-1)-1);
+ assign adc = (dac_o == 1'b0) ? val_max : val_min; //assign either the max or min value as ADC output 
+ assign delta_1 = delta_in + $signed(adc);            //subracting the adc output from the input
+ assign sigma_1 = int1_reg + delta_1;
+
+
+ always @ ( posedge clk ) begin
+ // gets active always when a positive edge of the clock signal occours
+ 
+  if ( rst_i == 1'b1 ) begin
+   // if reset is enabled, all registers are set to 0
+   int1_reg <= {BW_2 {1'b0}};
+   dac_reg <= 1'b0;
+  end else begin
+   int1_reg <= sigma_1;
+   dac_reg <= sigma_1[BW_2-1]; //use the sign bit to set the dac output register to either 1 or 0
+  end //if(rst_i == 1'b1 )
+ end //always
+
+ endmodule // counter
  
   module filter_FIR
  #(
  parameter BW = 16// optional parameter
  ) (
  // define I /O ’ s of the module
- input wire clk , // clock
- input wire rst_i , // reset
- input wire signed [BW-1:0] filter_i, //input
+ input clk , // clock
+ input rst_i , // reset
+ input signed [BW-1:0] filter_i, //input
  output wire signed [ BW-1:0] filter_o
  );
 

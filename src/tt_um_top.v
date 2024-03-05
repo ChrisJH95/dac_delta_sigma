@@ -7,14 +7,14 @@
  parameter BW = 16 // optional parameter
  ) (
  // define I /O ’ s of the module
- input clk, // clock
- input rst_n, // reset
- input ena,
- input [7:0] ui_in,
- input [7:0] uio_in,
- output [7:0] uo_out,
- output [7:0] uio_oe,
- output [7:0] uio_out
+ input wire clk, // clock
+ input wire rst_n, // reset
+ input wire ena,
+ input wire [7:0] ui_in,
+ input wire [7:0] uio_in,
+ output wire [7:0] uo_out,
+ output wire [7:0] uio_oe,
+ output wire [7:0] uio_out
  //input signed [BW-1:0] dac_i, //input
  //output wire dac_o
  );

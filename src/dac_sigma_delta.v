@@ -6,9 +6,9 @@
  parameter BW = 16 // optional parameter
  ) (
  // define I /O ’ s of the module
- input clk , // clock
- input rst_i , // reset
- input signed [BW-1:0] dac_i, //input
+ input wire clk , // clock
+ input wire rst_i , // reset
+ input wire signed [BW-1:0] dac_i, //input
  output wire dac_o
  ) ;
 
