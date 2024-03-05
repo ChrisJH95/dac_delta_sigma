@@ -1,4 +1,4 @@
-`timescale 1 ns / 1 ns
+ `timescale 1 ns / 1 ns
  
  //`include "filter_FIR.v"
 
@@ -34,7 +34,7 @@
  filter_FIR
  #(BW)
  filter_dut (
- .clk_i (clk),
+ .clk (clk),
  .rst_i (rst_i),
  .filter_i (dac_i),
  .filter_o (filter_to_dac_s)
@@ -43,7 +43,7 @@
  dac_sigma_delta
  #( BW )
  sigma_delta_dut (
- .clk_i ( clk ),
+ .clk ( clk ),
  .rst_i ( rst_i ),
  .dac_i (filter_to_dac_s),
  .dac_o (dac_o)

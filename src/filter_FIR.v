@@ -6,7 +6,7 @@
  parameter BW = 16// optional parameter
  ) (
  // define I /O ’ s of the module
- input clk_i , // clock
+ input clk , // clock
  input rst_i , // reset
  input signed [BW-1:0] filter_i, //input
  output wire signed [ BW-1:0] filter_o
@@ -31,7 +31,7 @@
  //assign b7 = $signed(8'b00000001);
 
  
- always @ ( posedge clk_i ) begin
+ always @ ( posedge clk ) begin
  // gets active always when a positive edge of the clock signal occours
  if ( rst_i == 1'b1 ) begin // if reset is enabled
   //set all registers to 0 when reset is enabled
@@ -86,7 +86,7 @@
   //end
  //end
 
-  always @ ( posedge clk_i ) begin
+  always @ ( posedge clk ) begin
   // gets active always when a positive edge of the clock signal occours
   if (rst_i == 1'b1) begin
    sum <= {2*BW {1'b0}};
